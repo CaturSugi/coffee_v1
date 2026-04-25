@@ -4,6 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="csrf-token" content="{{ csrf_token() }}">
+  <meta name="theme-color" content="{{ $settings['app_brand_color'] ?? '#ea580c' }}">
+  <link rel="manifest" href="{{ asset('manifest.json') }}">
+  <link rel="apple-touch-icon" href="{{ asset('images/icons/icon-192x192.png') }}">
   <title>@yield('title', 'Dashboard') — {{ $settings['shop_name'] ?? 'Bran Coffee' }} POS</title>
   <meta name="description" content="@yield('meta_description', ($settings['shop_name'] ?? 'Bran Coffee') . ' POS Management System')">
   @vite(['resources/css/app.css'])
@@ -338,5 +341,15 @@ setInterval(fetchNotifications, 30000); // Poll every 30s
 </script>
 
 @stack('scripts')
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      // Use the root-relative path for the service worker
+      navigator.serviceWorker.register('{{ asset("sw.js") }}')
+        .then(reg => console.log('Service worker registered.', reg))
+        .catch(err => console.log('Service worker registration failed:', err));
+    });
+  }
+</script>
 </body>
 </html>

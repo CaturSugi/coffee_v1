@@ -10,7 +10,7 @@
   <link rel="icon" type="image/png" href="{{ asset('storage/logo.png') }}">
   <title>@yield('title', 'Dashboard') — {{ $settings['shop_name'] ?? 'Bran Coffee' }} POS</title>
   <meta name="description" content="@yield('meta_description', ($settings['shop_name'] ?? 'Bran Coffee') . ' POS Management System')">
-  @vite(['resources/css/app.css'])
+  <link rel="stylesheet" href="{{ asset('css/app.css') }}">
   
   {{-- Dynamic Styling --}}
   <style>

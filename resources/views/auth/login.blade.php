@@ -5,9 +5,26 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="csrf-token" content="{{ csrf_token() }}">
-  <title>Login — Bran Coffee POS</title>
-  <meta name="description" content="Login ke sistem POS Bran Coffee Shop">
+  <title>Login — {{ $settings['shop_name'] ?? 'Bran Coffee' }} POS</title>
+  <meta name="description" content="Login ke sistem POS {{ $settings['shop_name'] ?? 'Bran Coffee' }}">
   @vite(['resources/css/app.css'])
+
+  {{-- Dynamic Styling --}}
+  <style>
+    :root {
+      @if(isset($settings['app_brand_color']))
+        --brand-500: {{ $settings['app_brand_color'] }};
+        --brand-400: {{ $settings['app_brand_color'] }}cc;
+        --brand-600: {{ $settings['app_brand_color'] }};
+        --brand-50: {{ $settings['app_brand_color'] }}10;
+        
+        @supports (color: color-mix(in srgb, red, white)) {
+          --brand-50: color-mix(in srgb, {{ $settings['app_brand_color'] }}, white 92%);
+          --brand-600: color-mix(in srgb, {{ $settings['app_brand_color'] }}, black 15%);
+        }
+      @endif
+    }
+  </style>
 </head>
 
 <body>
@@ -17,10 +34,14 @@
     {{-- Left Visual Panel --}}
     <div class="auth-visual">
       <div class="auth-visual-logo">
-        <div class="auth-visual-logo-icon">☕</div>
+        @if(isset($settings['app_logo']) && $settings['app_logo'])
+          <img src="{{ asset('storage/' . $settings['app_logo']) }}" alt="Logo" style="width:44px; height:44px; border-radius:12px; object-fit:cover;">
+        @else
+          <div class="auth-visual-logo-icon">☕</div>
+        @endif
         <div>
-          <div class="auth-visual-logo-text">Bran Coffee</div>
-          <div class="auth-visual-logo-sub">Point of Sale System</div>
+          <div class="auth-visual-logo-text">{{ $settings['shop_name'] ?? 'Bran Coffee' }}</div>
+          <div class="auth-visual-logo-sub">{{ $settings['shop_tagline'] ?? 'Point of Sale System' }}</div>
         </div>
       </div>
 
@@ -87,7 +108,7 @@
                 id="email"
                 name="email"
                 class="form-control @error('email') is-invalid @enderror"
-                placeholder="nama@brancoffee.com"
+                placeholder="nama@{{ Str::slug($settings['shop_name'] ?? 'brancoffee') }}.com"
                 value="{{ old('email') }}"
                 required
                 autofocus>

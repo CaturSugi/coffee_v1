@@ -4,9 +4,30 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="csrf-token" content="{{ csrf_token() }}">
-  <title>@yield('title', 'Dashboard') — Bran Coffee POS</title>
-  <meta name="description" content="@yield('meta_description', 'Bran Coffee POS Management System')">
+  <title>@yield('title', 'Dashboard') — {{ $settings['shop_name'] ?? 'Bran Coffee' }} POS</title>
+  <meta name="description" content="@yield('meta_description', ($settings['shop_name'] ?? 'Bran Coffee') . ' POS Management System')">
   @vite(['resources/css/app.css'])
+  
+  {{-- Dynamic Styling --}}
+  <style>
+    :root {
+      @if(isset($settings['app_brand_color']))
+        --brand-500: {{ $settings['app_brand_color'] }};
+        --brand-400: {{ $settings['app_brand_color'] }}cc;
+        --brand-600: {{ $settings['app_brand_color'] }};
+        --brand-50: {{ $settings['app_brand_color'] }}10; {{-- 10% opacity --}}
+        
+        {{-- Modern browser support for better color blending --}}
+        @supports (color: color-mix(in srgb, red, white)) {
+          --brand-50: color-mix(in srgb, {{ $settings['app_brand_color'] }}, white 92%);
+          --brand-100: color-mix(in srgb, {{ $settings['app_brand_color'] }}, white 80%);
+          --brand-600: color-mix(in srgb, {{ $settings['app_brand_color'] }}, black 15%);
+          --brand-700: color-mix(in srgb, {{ $settings['app_brand_color'] }}, black 30%);
+        }
+      @endif
+    }
+  </style>
+
   @stack('styles')
 </head>
 <body>
@@ -16,10 +37,14 @@
   {{-- ── Sidebar ── --}}
   <aside class="sidebar" id="sidebar">
     <div class="sidebar-logo">
-      <div class="sidebar-logo-icon">☕</div>
+      @if(isset($settings['app_logo']) && $settings['app_logo'])
+        <img src="{{ asset('storage/' . $settings['app_logo']) }}" alt="Logo" style="width:40px; height:40px; border-radius:10px; object-fit:cover;">
+      @else
+        <div class="sidebar-logo-icon">☕</div>
+      @endif
       <div>
-        <div class="sidebar-logo-text">Bran Coffee</div>
-        <div class="sidebar-logo-sub">POS System</div>
+        <div class="sidebar-logo-text">{{ $settings['shop_name'] ?? 'Bran Coffee' }}</div>
+        <div class="sidebar-logo-sub">{{ $settings['shop_tagline'] ?? 'POS System' }}</div>
       </div>
     </div>
 

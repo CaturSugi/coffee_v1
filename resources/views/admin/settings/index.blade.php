@@ -130,7 +130,13 @@
                         <div class="form-group">
                             <label>Logo Aplikasi</label>
                             <div style="display:flex; align-items:center; gap:24px; padding:20px; border:2px dashed var(--gray-100); border-radius:16px;">
-                                <div style="width:80px; height:80px; background:var(--gray-50); border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:32px;">☕</div>
+                                <div style="width:80px; height:80px; background:var(--gray-50); border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:32px; overflow:hidden;">
+                                    @if(isset($settings['app_logo']) && $settings['app_logo'])
+                                        <img src="{{ asset('storage/' . $settings['app_logo']) }}" alt="Logo" style="width:100%; height:100%; object-fit:cover;">
+                                    @else
+                                        ☕
+                                    @endif
+                                </div>
                                 <div style="flex:1;">
                                     <input type="file" name="app_logo" class="form-control" style="margin-bottom:8px;">
                                     <p style="font-size:12px; color:var(--gray-400); margin:0;">Disarankan PNG transparan, ukuran maksimal 2MB.</p>

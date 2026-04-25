@@ -11,7 +11,17 @@ class HomeController extends Controller
 {
     public function index()
     {
-        return view('welcome');
+        if (auth()->check()) {
+            $user = auth()->user();
+            return match (true) {
+                $user->isAdmin()   => redirect()->route('admin.dashboard'),
+                $user->isManager() => redirect()->route('manager.dashboard'),
+                $user->isCS()      => redirect()->route('cs.dashboard'),
+                default            => redirect()->route('login'),
+            };
+        }
+
+        return redirect()->route('login');
     }
 
     public function menu()

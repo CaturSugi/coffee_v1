@@ -255,6 +255,72 @@
         cursor: not-allowed;
     }
 
+    /* Payment Modal Styles */
+    .cash-nominal-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+        margin-top: 15px;
+    }
+    .nominal-btn {
+        background: #fff;
+        border: 1px solid var(--gray-200);
+        border-radius: 12px;
+        padding: 12px;
+        font-size: 14px;
+        font-weight: 700;
+        color: var(--dark-700);
+        cursor: pointer;
+        transition: all 0.2s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+    }
+    .nominal-btn:hover {
+        border-color: var(--brand-400);
+        background: var(--brand-50);
+        color: var(--brand-600);
+        transform: translateY(-2px);
+    }
+    .nominal-btn.active {
+        background: var(--brand-500);
+        border-color: var(--brand-500);
+        color: #fff;
+    }
+    .nominal-btn .icon { font-size: 16px; opacity: 0.7; }
+
+    .payment-input-wrapper {
+        position: relative;
+        margin-bottom: 20px;
+    }
+    .payment-input-icon {
+        position: absolute;
+        left: 16px;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 20px;
+        color: var(--gray-400);
+    }
+    .payment-input {
+        width: 100%;
+        height: 60px;
+        padding-left: 50px;
+        font-size: 24px;
+        font-weight: 800;
+        border-radius: 16px;
+        border: 2px solid var(--gray-100);
+        background: var(--gray-50);
+        color: var(--dark-800);
+        transition: all 0.2s;
+    }
+    .payment-input:focus {
+        border-color: var(--brand-500);
+        background: #fff;
+        box-shadow: 0 0 0 4px var(--brand-50);
+        outline: none;
+    }
+
     /* Modal Overlay */
     .modal-overlay {
         position: fixed;
@@ -466,18 +532,33 @@
                 </div>
 
                 <div x-show="paymentMethod === 'cash'">
-                    <label class="form-label">Diterima (Bayar)</label>
-                    <input type="number" x-model="cashReceived" class="form-control" style="font-size: 20px; font-weight: 700; height: 50px;" placeholder="0">
-                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 10px;">
-                        <button class="qty-btn" style="height: 35px; font-size: 12px;" @click="cashReceived = 20000">20.000</button>
-                        <button class="qty-btn" style="height: 35px; font-size: 12px;" @click="cashReceived = 50000">50.000</button>
-                        <button class="qty-btn" style="height: 35px; font-size: 12px;" @click="cashReceived = 100000">100.000</button>
-                        <button class="qty-btn" style="height: 35px; font-size: 12px;" @click="cashReceived = total">Pas</button>
+                    <label class="form-label" style="margin-bottom: 12px; display: block;">Uang Diterima (Bayar)</label>
+                    <div class="payment-input-wrapper">
+                        <span class="payment-input-icon">Rp</span>
+                        <input type="number" x-model="cashReceived" class="payment-input" placeholder="0">
                     </div>
 
-                    <div style="margin-top: 20px; padding: 15px; background: var(--gray-100); border-radius: 10px; display: flex; justify-content: space-between; align-items: center;">
-                        <span style="font-size: 14px; color: var(--gray-500);">Kembalian</span>
-                        <span style="font-size: 18px; font-weight: 800; color: var(--success);" x-text="formatCurrency(Math.max(0, cashReceived - total))"></span>
+                    <div class="cash-nominal-grid">
+                        <button class="nominal-btn" :class="cashReceived == 20000 ? 'active' : ''" @click="cashReceived = 20000">
+                            <span class="icon">💵</span> 20.000
+                        </button>
+                        <button class="nominal-btn" :class="cashReceived == 50000 ? 'active' : ''" @click="cashReceived = 50000">
+                            <span class="icon">💵</span> 50.000
+                        </button>
+                        <button class="nominal-btn" :class="cashReceived == 100000 ? 'active' : ''" @click="cashReceived = 100000">
+                            <span class="icon">💵</span> 100.000
+                        </button>
+                        <button class="nominal-btn" :class="cashReceived == total ? 'active' : ''" @click="cashReceived = total">
+                            <span class="icon">✨</span> Uang Pas
+                        </button>
+                    </div>
+
+                    <div style="margin-top: 24px; padding: 20px; background: #f8fafc; border: 1px solid var(--gray-100); border-radius: 16px; display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <div style="font-size: 12px; color: var(--gray-400); font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">Kembalian</div>
+                            <div style="font-size: 20px; font-weight: 800; color: var(--success); margin-top: 4px;" x-text="formatCurrency(Math.max(0, cashReceived - total))"></div>
+                        </div>
+                        <div style="font-size: 32px; opacity: 0.2;">💰</div>
                     </div>
                 </div>
 
